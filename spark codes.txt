@@ -1,0 +1,50 @@
+import pandas as pd
+import numpy as np 
+import seaborn as sns
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+data =pd.read_csv('SampleSuperstore.csv')
+data.head()
+data.shape
+sns.countplot(x='Ship Mode',data=data)
+correl=data.corr()
+correl
+sns.heatmap(correl,cmap='Reds',annot=True)
+sns.pairplot(data,hue='Segment')
+data['Category'].unique()
+
+set=data['Category'].value_counts()
+set
+plt.figure(figsize=(11,8))
+color=["green","red","blue"]
+set.plot.pie(autopct="%.3f",shadow=True,colors=color)
+plt.title("categories")
+
+plt.figure(figsize=(11,8))
+sub_cat=data['Sub-Category'].value_counts()
+theme=plt.get_cmap('hsv')
+sub_cat.plot.pie(autopct='%.3f',shadow=True)
+plt.title('superstore',fontsize=15)
+
+plt.figure(figsize=(15,12))
+sns.countplot(x='State',data=data,palette='rocket_r',order=data['State'].value_counts().index)
+plt.xticks(rotation=90)
+
+sns.lineplot(x='Quantity',y='Profit',label='profit',data=data)
+
+data.groupby('Segment')[['Profit','Sales']].sum().plot.bar(color=['blue','yellow'],figsize=(8,5))
+
+plt.figure(figsize=(15,12))
+plt.title("count of sub-category",fontsize=13)
+sns.countplot(data=data,x='Sub-Category',hue='Region')
+plt.grid(color='red',linestyle='--',linewidth=0.3)
+
+stats=data.groupby('Sub-Category')[['Sales','Profit']].sum().sort_values(by='Sales',ascending=False)
+stats[:].plot.bar(color=['green','orange'],figsize=(15,10))
+
+data.groupby('Region')[['Profit','Sales']].sum().plot.bar(color=['red','orange'],figsize=(8,5))
+
+plt.figure(figsize=(15,12))
+sns.barplot(x='Region',y='Sales',data=data,hue='Segment',order=data['Region'].value_counts().index,palette='rocket')
+
